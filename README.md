@@ -4,6 +4,8 @@ This project will consist of a client gathering sensor data that relays said dat
 
 The database will be accessible by TCP-socket API and a simple HTTP API. The stored data will be retrieved for processing for machine learning purposes on a PC.
 
+[projektikuva](https://github.com/matiasKoo/sovellusprojektiR14/blob/main/pictures/tietoliikenneprojekti%20kaavio.drawio.png)
+
 # The following are placeholders for actual content
 
 ## nordic semiconductior nrf5340
