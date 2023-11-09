@@ -24,7 +24,7 @@
 
 #include "my_lbs.h"
 
-LOG_MODULE_DECLARE(Lesson4_Exercise2);
+LOG_MODULE_DECLARE(yhdistely);
 
 static bool notify_mysensor_enabled;
 static bool indicate_enabled;

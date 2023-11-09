@@ -13,6 +13,15 @@
 #include <dk_buttons_and_leds.h>
 #include "my_lbs.h"
 
+#include "adc.h"
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <inttypes.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <zephyr/sys/printk.h>
+#include <zephyr/sys/util.h>
+
 static struct bt_le_adv_param *adv_param = BT_LE_ADV_PARAM(
 	(BT_LE_ADV_OPT_CONNECTABLE |
 	 BT_LE_ADV_OPT_USE_IDENTITY), /* Connectable advertising and use identity address */
@@ -20,7 +29,7 @@ static struct bt_le_adv_param *adv_param = BT_LE_ADV_PARAM(
 	801, /* Max Advertising Interval 500.625ms (801*0.625ms) */
 	NULL); /* Set to NULL for undirected advertising */
 
-LOG_MODULE_REGISTER(Lesson4_Exercise2, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(yhdistely, LOG_LEVEL_INF);
 
 #define DEVICE_NAME CONFIG_BT_DEVICE_NAME
 #define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
@@ -29,6 +38,7 @@ LOG_MODULE_REGISTER(Lesson4_Exercise2, LOG_LEVEL_INF);
 #define CON_STATUS_LED DK_LED2
 #define USER_LED DK_LED3
 #define USER_BUTTON DK_BTN1_MSK
+
 
 #define STACKSIZE 1024
 #define PRIORITY 7
@@ -55,6 +65,9 @@ static const struct bt_data sd[] = {
 	BT_DATA_BYTES(BT_DATA_UUID128_ALL, BT_UUID_LBS_VAL),
 };
 
+
+
+
 /* STEP 16 - Define a function to simulate the data */
 static void simulate_data(void)
 {
@@ -68,6 +81,9 @@ static void simulate_data(void)
 	if (data_loop == 4){
 		data_loop = 0;
 	}
+	struct Measurement m = readADCValue();
+		printk("x = %d,  y = %d,  z = %d\n",m.x,m.y,m.z);
+	
 }
 
 static void app_led_cb(bool led_state)
@@ -83,18 +99,22 @@ static bool app_button_cb(void)
 /* STEP 18.1 - Define the thread function  */
 void send_data_thread(void)
 {
+	
+	initializeADC();
+	
 	while(1){
+		
 		/* Simulate data */
 		simulate_data();
 		/* Send notification, the function sends notifications only if a client is subscribed */
+
 		my_lbs_send_sensor_notify(1);
-		k_sleep(K_MSEC(50));
-		my_lbs_send_sensor_notify(2);
-		k_sleep(K_MSEC(50));
-		my_lbs_send_sensor_notify(3);
-		k_sleep(K_MSEC(50));
-		my_lbs_send_sensor_notify(4);
-		k_sleep(K_MSEC(250));
+		struct Measurement m = readADCValue();
+
+		my_lbs_send_sensor_notify(m.x);
+		my_lbs_send_sensor_notify(m.y);
+
+
 		k_sleep(K_MSEC(NOTIFY_INTERVAL));
 	}
 }
@@ -152,6 +172,8 @@ static int init_button(void)
 
 void main(void)
 {
+	struct Measurement m = readADCValue();
+
 	int blink_status = 0;
 	int err;
 
@@ -194,6 +216,7 @@ void main(void)
 		dk_set_led(RUN_STATUS_LED, (++blink_status) % 2);
 		k_sleep(K_MSEC(RUN_LED_BLINK_INTERVAL));
 	}
+
 }
 
 /* STEP 18.2 - Define and initialize a thread to send data periodically */
