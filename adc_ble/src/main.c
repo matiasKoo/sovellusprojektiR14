@@ -38,6 +38,7 @@ LOG_MODULE_REGISTER(yhdistely, LOG_LEVEL_INF);
 #define CON_STATUS_LED DK_LED2
 #define USER_LED DK_LED3
 #define USER_BUTTON DK_BTN1_MSK
+#define USER_BUTTON_2           DK_BTN2_MSK
 
 
 #define STACKSIZE 1024
@@ -104,7 +105,7 @@ void send_data_thread(void)
 		//simulate_data();
 		/* Send notification, the function sends notifications only if a client is subscribed */
 
-		my_lbs_send_sensor_notify(1);
+		
 		struct Measurement m = readADCValue();
 
 		my_lbs_send_sensor_notify(button_val);
@@ -136,11 +137,18 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 		my_lbs_send_button_state_indicate(user_button_state);
 
 		//vaihda suunta napin painalluksella
-		napinarvo();
+		
 
 
 		app_button_state = user_button_state ? true : false;
 	}
+		if ((has_changed & USER_BUTTON_2) && (button_state & USER_BUTTON_2)) 
+	{
+		printk("Nappi 2 alhaalla\n");
+		napinarvo();
+	}		
+
+
 }
 
 static void on_connected(struct bt_conn *conn, uint8_t err)
