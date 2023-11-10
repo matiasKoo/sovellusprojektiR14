@@ -50,8 +50,8 @@ LOG_MODULE_REGISTER(yhdistely, LOG_LEVEL_INF);
 static bool app_button_state;
 /* STEP 15 - Define the data you want to stream over Bluetooth LE */
 static uint32_t app_sensor_value = 100;
-static int8_t data_loop = 0;
-static int testi[] = {1,1200,1333,1500};
+static uint16_t button_val = 0;
+
 
 static bool app_button_state;
 
@@ -76,11 +76,7 @@ static void simulate_data(void)
 	if (app_sensor_value == 200) {
 		app_sensor_value = 100;
 	}*/
-	app_sensor_value = testi[data_loop];
-	data_loop ++;
-	if (data_loop == 4){
-		data_loop = 0;
-	}
+	
 	struct Measurement m = readADCValue();
 		printk("x = %d,  y = %d,  z = %d\n",m.x,m.y,m.z);
 	
@@ -105,14 +101,16 @@ void send_data_thread(void)
 	while(1){
 		
 		/* Simulate data */
-		simulate_data();
+		//simulate_data();
 		/* Send notification, the function sends notifications only if a client is subscribed */
 
 		my_lbs_send_sensor_notify(1);
 		struct Measurement m = readADCValue();
 
+		my_lbs_send_sensor_notify(button_val);
 		my_lbs_send_sensor_notify(m.x);
 		my_lbs_send_sensor_notify(m.y);
+		my_lbs_send_sensor_notify(m.z);
 
 
 		k_sleep(K_MSEC(NOTIFY_INTERVAL));
@@ -123,7 +121,13 @@ static struct my_lbs_cb app_callbacks = {
 	.led_cb = app_led_cb,
 	.button_cb = app_button_cb,
 };
-
+// nappi funktio
+static void napinarvo(){
+	button_val ++;
+	if (button_val == 6){
+		button_val = 0;
+	}
+}
 static void button_changed(uint32_t button_state, uint32_t has_changed)
 {
 	if (has_changed & USER_BUTTON) {
@@ -131,9 +135,14 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 		/* STEP 6 - Send indication on a button press */
 		my_lbs_send_button_state_indicate(user_button_state);
 
+		//vaihda suunta napin painalluksella
+		napinarvo();
+
+
 		app_button_state = user_button_state ? true : false;
 	}
 }
+
 static void on_connected(struct bt_conn *conn, uint8_t err)
 {
 	if (err) {
