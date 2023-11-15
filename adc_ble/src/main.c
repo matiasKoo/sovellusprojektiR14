@@ -13,6 +13,15 @@
 #include <dk_buttons_and_leds.h>
 #include "my_lbs.h"
 
+#include "adc.h"
+#include <zephyr/device.h>
+#include <zephyr/devicetree.h>
+#include <inttypes.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <zephyr/sys/printk.h>
+#include <zephyr/sys/util.h>
+
 static struct bt_le_adv_param *adv_param = BT_LE_ADV_PARAM(
 	(BT_LE_ADV_OPT_CONNECTABLE |
 	 BT_LE_ADV_OPT_USE_IDENTITY), /* Connectable advertising and use identity address */
@@ -20,7 +29,7 @@ static struct bt_le_adv_param *adv_param = BT_LE_ADV_PARAM(
 	801, /* Max Advertising Interval 500.625ms (801*0.625ms) */
 	NULL); /* Set to NULL for undirected advertising */
 
-LOG_MODULE_REGISTER(Lesson4_Exercise2, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(yhdistely, LOG_LEVEL_INF);
 
 #define DEVICE_NAME CONFIG_BT_DEVICE_NAME
 #define DEVICE_NAME_LEN (sizeof(DEVICE_NAME) - 1)
@@ -29,6 +38,8 @@ LOG_MODULE_REGISTER(Lesson4_Exercise2, LOG_LEVEL_INF);
 #define CON_STATUS_LED DK_LED2
 #define USER_LED DK_LED3
 #define USER_BUTTON DK_BTN1_MSK
+#define USER_BUTTON_2           DK_BTN2_MSK
+
 
 #define STACKSIZE 1024
 #define PRIORITY 7
@@ -40,8 +51,8 @@ LOG_MODULE_REGISTER(Lesson4_Exercise2, LOG_LEVEL_INF);
 static bool app_button_state;
 /* STEP 15 - Define the data you want to stream over Bluetooth LE */
 static uint32_t app_sensor_value = 100;
-static int8_t data_loop = 0;
-static int testi[] = {1,1200,1333,1500};
+static uint16_t button_val = 0;
+
 
 static bool app_button_state;
 
@@ -55,6 +66,9 @@ static const struct bt_data sd[] = {
 	BT_DATA_BYTES(BT_DATA_UUID128_ALL, BT_UUID_LBS_VAL),
 };
 
+
+
+
 /* STEP 16 - Define a function to simulate the data */
 static void simulate_data(void)
 {
@@ -63,11 +77,10 @@ static void simulate_data(void)
 	if (app_sensor_value == 200) {
 		app_sensor_value = 100;
 	}*/
-	app_sensor_value = testi[data_loop];
-	data_loop ++;
-	if (data_loop == 4){
-		data_loop = 0;
-	}
+	
+	struct Measurement m = readADCValue();
+		printk("x = %d,  y = %d,  z = %d\n",m.x,m.y,m.z);
+	
 }
 
 static void app_led_cb(bool led_state)
@@ -83,18 +96,24 @@ static bool app_button_cb(void)
 /* STEP 18.1 - Define the thread function  */
 void send_data_thread(void)
 {
+	
+	initializeADC();
+	
 	while(1){
+		
 		/* Simulate data */
-		simulate_data();
+		//simulate_data();
 		/* Send notification, the function sends notifications only if a client is subscribed */
-		my_lbs_send_sensor_notify(1);
-		k_sleep(K_MSEC(50));
-		my_lbs_send_sensor_notify(2);
-		k_sleep(K_MSEC(50));
-		my_lbs_send_sensor_notify(3);
-		k_sleep(K_MSEC(50));
-		my_lbs_send_sensor_notify(4);
-		k_sleep(K_MSEC(250));
+
+		
+		struct Measurement m = readADCValue();
+
+		my_lbs_send_sensor_notify(button_val);
+		my_lbs_send_sensor_notify(m.x);
+		my_lbs_send_sensor_notify(m.y);
+		my_lbs_send_sensor_notify(m.z);
+
+
 		k_sleep(K_MSEC(NOTIFY_INTERVAL));
 	}
 }
@@ -103,7 +122,13 @@ static struct my_lbs_cb app_callbacks = {
 	.led_cb = app_led_cb,
 	.button_cb = app_button_cb,
 };
-
+// nappi funktio
+static void napinarvo(){
+	button_val ++;
+	if (button_val == 6){
+		button_val = 0;
+	}
+}
 static void button_changed(uint32_t button_state, uint32_t has_changed)
 {
 	if (has_changed & USER_BUTTON) {
@@ -111,9 +136,21 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 		/* STEP 6 - Send indication on a button press */
 		my_lbs_send_button_state_indicate(user_button_state);
 
+		//vaihda suunta napin painalluksella
+		
+
+
 		app_button_state = user_button_state ? true : false;
 	}
+		if ((has_changed & USER_BUTTON_2) && (button_state & USER_BUTTON_2)) 
+	{
+		printk("Nappi 2 alhaalla\n");
+		napinarvo();
+	}		
+
+
 }
+
 static void on_connected(struct bt_conn *conn, uint8_t err)
 {
 	if (err) {
@@ -152,6 +189,8 @@ static int init_button(void)
 
 void main(void)
 {
+	struct Measurement m = readADCValue();
+
 	int blink_status = 0;
 	int err;
 
@@ -194,6 +233,7 @@ void main(void)
 		dk_set_led(RUN_STATUS_LED, (++blink_status) % 2);
 		k_sleep(K_MSEC(RUN_LED_BLINK_INTERVAL));
 	}
+
 }
 
 /* STEP 18.2 - Define and initialize a thread to send data periodically */
