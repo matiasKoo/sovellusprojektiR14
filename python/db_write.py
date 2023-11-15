@@ -21,4 +21,4 @@ def db_write(suunta,x,y,z):
 
   mydb.commit()
 
-db_write(0,123,234,345)
+#db_write(0,123,234,345)
