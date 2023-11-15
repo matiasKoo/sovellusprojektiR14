@@ -14,7 +14,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 def db_write(suunta,x,y,z):
-  sql="INSERT INTO rawdata (groupid,sensorvalue_a,sensorvalue_b,sensorvalue_c,sensorvalue_d) VALUES (999,%s,%s,%s,%s)"
+  sql="INSERT INTO rawdata (groupid,sensorvalue_a,sensorvalue_b,sensorvalue_c,sensorvalue_d) VALUES (14,%s,%s,%s,%s)"
   val=(suunta,x,y,z)
 
   mycursor.execute(sql,val)
