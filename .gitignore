@@ -1,3 +1,5 @@
+.env
 adc/build/
 blex2/build/
 adc_ble/build/
+*/__pycache__
