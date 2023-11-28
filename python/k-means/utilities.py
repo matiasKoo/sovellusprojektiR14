@@ -18,6 +18,20 @@ def initializeCenterPoints(n,parameters):
 def calculateDistance(p1,p2):
     return np.sqrt(np.sum((p1-p2)**2))
 
+def getClosest(p,cp):
+    #tämä on huonosti tehty, mutta tehty kuitenkin
+    smallest_dist = 10000000
+    smallest_index = 0
+
+    for i in range(cp.shape[0]):
+        dist = calculateDistance(p,cp[i])
+        if dist < smallest_dist :
+            smallest_dist = dist
+            smallest_index = i
+    
+    return cp[smallest_index]
+    
+
 
 def getData():
     #yhdistetään tietokantaan ja lähetetään ryhmänro
@@ -47,5 +61,5 @@ def getData():
 
 
 if __name__ == "__main__":
-    x = initializeCenterPoints(6,3)
+    print("hei olen main filu")
     
