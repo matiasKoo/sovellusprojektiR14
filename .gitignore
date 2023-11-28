@@ -3,4 +3,4 @@ adc/build/
 blex2/build/
 adc_ble/build/
 */__pycache__
-*/py_data.csv
+**/py_data.csv
