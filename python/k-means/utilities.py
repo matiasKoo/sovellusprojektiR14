@@ -1,7 +1,27 @@
 import socket
 import pandas as pd
+import numpy as np
+
+
+def randomCenterPoint(low,high):
+    return np.random.randint(low,high,3)
+
+def initializeCenterPoints(n,parameters):
+    #luodaan tyhjä taulukko joka on muotoa n kertaa parameters (= mittaustulosten
+    #lukumäärä per tieto)
+    cp = np.zeros((n,parameters))
+    for i in range(n):
+        cp[i,:]=randomCenterPoint(1000,2000)
+    
+    return cp
+
+def calculateDistance(p1,p2):
+    return np.sqrt(np.sum((p1-p2)**2))
+
 
 def getData():
+    #yhdistetään tietokantaan ja lähetetään ryhmänro
+    #takaisin tulee kaikki ryhmänroa vastaavat datat
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(('172.20.241.9', 20000))
     s.sendall(b'14\n')
@@ -11,8 +31,9 @@ def getData():
         data = s.recv(1024)
         if len(data) == 0:
             break
-        chunks.append(data.decode('utf-8').replace(" ", ","))
+        chunks.append(data.decode('utf-8').replace(" ", ",")) #replacella csv-muoto
 
+    #alustaa tiedoston tyhjäksi
     open("py_data.csv","w").close()
 
     for i in chunks:
@@ -20,11 +41,11 @@ def getData():
         f = open("py_data.csv", "a")
         f.write(i)
 
-        print(i, end = '')
 
     s.close()
 
 
+
 if __name__ == "__main__":
-    getData()
+    x = initializeCenterPoints(6,3)
     
