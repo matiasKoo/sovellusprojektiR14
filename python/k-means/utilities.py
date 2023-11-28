@@ -2,6 +2,7 @@ import socket
 import pandas as pd
 import numpy as np
 
+winRecord = np.zeros((6,4))
 
 def randomCenterPoint(low,high):
     return np.random.randint(low,high,3)
@@ -18,6 +19,11 @@ def initializeCenterPoints(n,parameters):
 def calculateDistance(p1,p2):
     return np.sqrt(np.sum((p1-p2)**2))
 
+
+def recordWinningPoint(winner,coordinate):
+    # lisätään voittaneen pisteen tiedot taulukkoon
+    winRecord[winner,:3] = winRecord[winner,:3] + coordinate
+    winRecord[winner,3]  += 1
 
 def getData():
     #yhdistetään tietokantaan ja lähetetään ryhmänro
@@ -48,4 +54,5 @@ def getData():
 
 if __name__ == "__main__":
     x = initializeCenterPoints(6,3)
+    #recordWinningPoint(1,np.array([1,2,3]))
     
