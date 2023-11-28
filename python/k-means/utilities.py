@@ -19,6 +19,20 @@ def initializeCenterPoints(n,parameters):
 def calculateDistance(p1,p2):
     return np.sqrt(np.sum((p1-p2)**2))
 
+def getClosest(p,cp):
+    #tämä on huonosti tehty, mutta tehty kuitenkin
+    smallest_dist = 10000000
+    smallest_index = 0
+
+    for i in range(cp.shape[0]):
+        dist = calculateDistance(p,cp[i])
+        if dist < smallest_dist :
+            smallest_dist = dist
+            smallest_index = i
+    
+    return cp[smallest_index]
+    
+
 
 def recordWinningPoint(winner,coordinate):
     # lisätään voittaneen pisteen tiedot taulukkoon
@@ -53,6 +67,10 @@ def getData():
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     x = initializeCenterPoints(6,3)
     #recordWinningPoint(1,np.array([1,2,3]))
+=======
+    print("hei olen main filu")
+>>>>>>> 6b1315e6c91e2a56011e3d2849cdcdba2e90421a
     
