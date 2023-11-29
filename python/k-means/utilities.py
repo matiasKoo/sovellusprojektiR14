@@ -30,7 +30,7 @@ def getClosest(p,cp):
             smallest_dist = dist
             smallest_index = i
     
-    return cp[smallest_index]
+    return smallest_index,cp[smallest_index]
 
 def averagePoints(pisteet):
     #otetaan keskiarvo uusille keskipisteille ja uudet satunnais arvot pisteille joita ei valittu
@@ -76,10 +76,17 @@ def getData():
 
 
 if __name__ == "__main__":
-    x = initializeCenterPoints(6,3)
-    recordWinningPoint(1,np.array([1,2,3]))
-    recordWinningPoint(1,np.array([3,2,3]))
-    x = averagePoints(x)
-    print(x)
-    print("hei olen main filu")
+    getData()
+
+    centerPoints = initializeCenterPoints(6,3)
+    print(centerPoints)
+
+    data = pd.read_csv("py_data.csv",header=None).iloc[:,6:9].to_numpy()
+
+    for i in range(len(data)):
+        smallestIndex = getClosest(data[i],centerPoints)[0]
+        closestPoint = getClosest(data[i],centerPoints)[1]
+        recordWinningPoint(smallestIndex,closestPoint)
     
+    centerPoints = averagePoints(centerPoints)
+    print(centerPoints)
