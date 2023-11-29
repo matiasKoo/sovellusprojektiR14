@@ -31,8 +31,17 @@ def getClosest(p,cp):
             smallest_index = i
     
     return cp[smallest_index]
-    
 
+def averagePoints(pisteet):
+    #otetaan keskiarvo uusille keskipisteille ja uudet satunnais arvot pisteille joita ei valittu
+    #pisteet = np.zeros((6,3))
+    for i in range(6):
+        if winRecord[i,3] != 0:
+            pisteet[i] = winRecord[i,:3] / winRecord[i,3]
+        else:
+            pisteet[i] = randomCenterPoint(1000,2000)
+    
+    return(pisteet)
 
 def recordWinningPoint(winner,coordinate):
     # lisätään voittaneen pisteen tiedot taulukkoon
@@ -67,10 +76,10 @@ def getData():
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     x = initializeCenterPoints(6,3)
-    #recordWinningPoint(1,np.array([1,2,3]))
-=======
+    recordWinningPoint(1,np.array([1,2,3]))
+    recordWinningPoint(1,np.array([3,2,3]))
+    x = averagePoints(x)
+    print(x)
     print("hei olen main filu")
->>>>>>> 6b1315e6c91e2a56011e3d2849cdcdba2e90421a
     
