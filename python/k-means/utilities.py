@@ -12,7 +12,7 @@ def initializeCenterPoints(n,parameters):
     #lukumäärä per tieto)
     cp = np.zeros((n,parameters))
     for i in range(n):
-        cp[i,:]=randomCenterPoint(1000,2000)
+        cp[i,:]=randomCenterPoint(1200,1700)
     
     return cp
 
@@ -39,7 +39,7 @@ def averagePoints(pisteet):
         if winRecord[i,3] != 0:
             pisteet[i] = winRecord[i,:3] / winRecord[i,3]
         else:
-            pisteet[i] = randomCenterPoint(1000,2000)
+            pisteet[i] = randomCenterPoint(1200,1700)
     
     return(pisteet)
 
@@ -73,7 +73,48 @@ def getData():
 
     s.close()
 
+def teachingLoop():
+    #tää data ois fiksumpi kerätä aliohjelman ulkopuolella, mutta se on voi voi
+    data = pd.read_csv("py_data.csv",header=None).iloc[:,6:9].to_numpy()
+    #pythonissa globaalit muuttujat toimii näin ":D"
+    global winRecord
+    global centerPoints
+    for i in range(len(data)):
+        smallestIndex = getClosest(data[i],centerPoints)[0]
+        closestPoint = getClosest(data[i],centerPoints)[1]
+        recordWinningPoint(smallestIndex,closestPoint)
+    
+    winRecord = np.zeros((6,4))
+    centerPoints = averagePoints(centerPoints)
 
+def createCArray(centerPoints):
+    dataString = ""
+
+    for i in range(len(centerPoints)):
+
+        for j in range(len(centerPoints[i])):
+            if j == 0:
+                dataString = dataString+"{"+str(centerPoints[i][j])+","
+            if j == 1:
+                dataString = dataString+str(centerPoints[i][j])+","
+            if j == 2:
+                dataString = dataString+str(centerPoints[i][j])+"}"
+        if i == 5:
+            return dataString
+        else:        
+            dataString = dataString+","
+    
+    #return dataString
+        
+
+def centerPointsToHeader():
+    data = createCArray(centerPoints)
+
+    dataString = "#ifndef KMEANS_H\n#define KMEANS_H\nint CP[6][3] = {"
+    dataString = dataString + data + "};\n#endif"
+
+    with open("kmeans.h","w") as f:
+        f.write(dataString)
 
 if __name__ == "__main__":
     getData()
@@ -81,12 +122,7 @@ if __name__ == "__main__":
     centerPoints = initializeCenterPoints(6,3)
     print(centerPoints)
 
-    data = pd.read_csv("py_data.csv",header=None).iloc[:,6:9].to_numpy()
+    for i in range(10):
+        teachingLoop()
 
-    for i in range(len(data)):
-        smallestIndex = getClosest(data[i],centerPoints)[0]
-        closestPoint = getClosest(data[i],centerPoints)[1]
-        recordWinningPoint(smallestIndex,closestPoint)
-    
-    centerPoints = averagePoints(centerPoints)
-    print(centerPoints)
+    centerPointsToHeader()
