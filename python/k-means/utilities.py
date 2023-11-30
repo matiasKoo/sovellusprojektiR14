@@ -1,6 +1,7 @@
 import socket
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 winRecord = np.zeros((6,4))
 
@@ -82,11 +83,13 @@ def teachingLoop():
     for i in range(len(data)):
         smallestIndex = getClosest(data[i],centerPoints)[0]
         closestPoint = getClosest(data[i],centerPoints)[1]
-        recordWinningPoint(smallestIndex,closestPoint)
+        recordWinningPoint(smallestIndex,data[i])
     
-    winRecord = np.zeros((6,4))
+    #print(centerPoints)
+    #visualize(centerPoints)
     centerPoints = averagePoints(centerPoints)
-
+    winRecord = np.zeros((6,4))
+    
 def createCArray(centerPoints):
     dataString = ""
 
@@ -116,13 +119,34 @@ def centerPointsToHeader():
     with open("kmeans.h","w") as f:
         f.write(dataString)
 
-if __name__ == "__main__":
-    getData()
+def visualize(cp):
+    df = pd.read_csv("py_data.csv",header=None)
 
+    a = df.iloc[:,6:9].to_numpy()
+
+
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+    ax.scatter(a[:,0],a[:,1],a[:,2])
+    ax.scatter(cp[:,0],cp[:,1],cp[:,2],color = "red")
+
+    plt.show()
+
+if __name__ == "__main__":
+
+
+    
+    getData()
     centerPoints = initializeCenterPoints(6,3)
     print(centerPoints)
 
     for i in range(10):
         teachingLoop()
+        
+
+    print(centerPoints)
 
     centerPointsToHeader()
+    
+
+
+    
