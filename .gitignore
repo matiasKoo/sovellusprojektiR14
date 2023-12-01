@@ -5,3 +5,4 @@ adc_ble/build/
 **/__pycache__
 **/py_data.csv
 **/kmeans.h
+**/neroverkonkertoimet.h
