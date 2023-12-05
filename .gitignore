@@ -2,4 +2,7 @@
 adc/build/
 blex2/build/
 adc_ble/build/
-*/__pycache__
+**/__pycache__
+**/py_data.csv
+**/kmeans.h
+**/neroverkonkertoimet.h
