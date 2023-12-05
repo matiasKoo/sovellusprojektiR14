@@ -72,16 +72,22 @@ void makeHundredFakeClassifications(void)
    varmistaaksesi, että etäisuuden laskenta ja luokittelu toimii varmasti tunnetulla
    itse keksimälläsi sensoridatalla ja itse keksimilläsi keskipisteillä.
    *******************************************/
+
+   
    printk("Make your own implementation for this function if you need this\n");
 }
 
-void makeOneClassificationAndUpdateConfusionMatrix(int direction)
+void makeOneClassificationAndUpdateConfusionMatrix(int direction,int x,int y,int z)
 {
    /**************************************
    Tee toteutus tälle ja voit tietysti muuttaa tämän aliohjelman sellaiseksi,
    että se tekee esim 100 kpl mittauksia tai sitten niin, että tätä funktiota
    kutsutaan 100 kertaa yhden mittauksen ja sen luokittelun tekemiseksi.
    **************************************/
+
+   int winner = calculateDistanceToAllCentrePointsAndSelectWinner(x,y,z);
+   CM[direction][winner]++;
+
    printk("Make your own implementation for this function if you need this\n");
 }
 
@@ -94,13 +100,11 @@ int calculateDistanceToAllCentrePointsAndSelectWinner(int x,int y,int z)
    ***************************************/
   
    float minDistance = calculateDistance(x,y,z,CP[0][0],CP[0][1],CP[0][2]);
-   printk("%f\n",minDistance);
    float distance;
    int winner = 0;
 
    for (int i=1;i<6;i++){
       distance = calculateDistance(x,y,z,CP[i][0],CP[i][1],CP[i][2]);
-      printk("%f\n",distance);
       if(minDistance > distance){
          minDistance = distance;
          winner = i;
