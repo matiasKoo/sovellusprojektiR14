@@ -37,6 +37,20 @@ int measurements[6][3]={
 
 int CM[6][6]= {0};
 
+float calculateDistance(int x1, int y1, int z1,
+                        int x2, int y2, int z2){
+   //kahden 3D-avaruuden pisteen välinen etäisyys on:
+   //etäisyys = sqrt((x2-x1)**2+(y2-y1)**2+(z2-z1)**2)
+   float x_delta = (float)x2 - (float)x1;
+   float y_delta = (float)y2 - (float)y1;
+   float z_delta = (float)z2 - (float)z1;
+
+   float len = sqrt(pow(x_delta,2)+pow(y_delta,2)+pow(z_delta,2));
+
+   return len;
+
+}
+
 
 
 void printConfusionMatrix(void)
@@ -48,6 +62,8 @@ void printConfusionMatrix(void)
 		printk("cp%d %d   %d   %d   %d   %d   %d\n",i+1,CM[i][0],CM[i][1],CM[i][2],CM[i][3],CM[i][4],CM[i][5]);
 	}
 }
+
+
 
 void makeHundredFakeClassifications(void)
 {

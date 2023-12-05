@@ -7,6 +7,7 @@ void makeHundredFakeClassifications(void);
 void makeOneClassificationAndUpdateConfusionMatrix(int);
 int calculateDistanceToAllCentrePointsAndSelectWinner(int,int,int);
 void resetConfusionMatrix(void);
+float calculateDistance(int,int,int,int,int,int);
 
 
 #endif

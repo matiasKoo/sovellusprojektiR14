@@ -1,0 +1,8 @@
+{
+    "nrf-connect.applications": [
+        "${workspaceFolder}\\TL_Project_Week6"
+    ],
+    "files.associations": {
+        "cmath": "c"
+    }
+}
