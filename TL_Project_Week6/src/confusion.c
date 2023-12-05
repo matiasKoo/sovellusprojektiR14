@@ -72,6 +72,22 @@ void makeHundredFakeClassifications(void)
    varmistaaksesi, että etäisuuden laskenta ja luokittelu toimii varmasti tunnetulla
    itse keksimälläsi sensoridatalla ja itse keksimilläsi keskipisteillä.
    *******************************************/
+
+   //looppi joka tekee 100 kertaa tyhmän datapisteen suunnalla, arvaa tyhmän datapisteen winnerin
+   //ja lopuksi confusion matrixiin koordinaattiin suunta,arvaussuunta lisätään yksi piste
+   for (int i = 0; i<=99; i++){
+      //arvotaan data
+      int suunta = rand()%6;
+      int x = rand()%2;
+      int y = rand()%2;
+      int z = rand()%2;
+
+      int suunta_arvaus = calculateDistanceToAllCentrePointsAndSelectWinner(x,y,z);
+
+      CM[suunta][suunta_arvaus]++;
+   }
+
+
    printk("Make your own implementation for this function if you need this\n");
 }
 
@@ -94,13 +110,11 @@ int calculateDistanceToAllCentrePointsAndSelectWinner(int x,int y,int z)
    ***************************************/
   
    float minDistance = calculateDistance(x,y,z,CP[0][0],CP[0][1],CP[0][2]);
-   printk("%f\n",minDistance);
    float distance;
    int winner = 0;
 
    for (int i=1;i<6;i++){
       distance = calculateDistance(x,y,z,CP[i][0],CP[i][1],CP[i][2]);
-      printk("%f\n",distance);
       if(minDistance > distance){
          minDistance = distance;
          winner = i;
