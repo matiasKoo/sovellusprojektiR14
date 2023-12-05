@@ -140,7 +140,8 @@ void main(void)
 		dk_set_led_on(USER_LED2);
 		dk_set_led_on(USER_LED3);
 		dk_set_led_on(USER_LED4);
-		printk("%f\n",calculateDistance(1,1,1,2,2,2));
+		//printk("%f\n",calculateDistance(1,1,1,2,2,2));
+		printk("%d\n",calculateDistanceToAllCentrePointsAndSelectWinner(1,1,1));
 		 
 		k_sleep(K_MSEC(1000));
 		

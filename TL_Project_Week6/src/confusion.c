@@ -63,8 +63,6 @@ void printConfusionMatrix(void)
 	}
 }
 
-
-
 void makeHundredFakeClassifications(void)
 {
    /*******************************************
@@ -94,9 +92,22 @@ int calculateDistanceToAllCentrePointsAndSelectWinner(int x,int y,int z)
    laskee etäisyyden kaikkiin 6 K-means keskipisteisiin ja valitsee
    sen keskipisteen, jonka etäisyys mittaustulokseen on lyhyin.
    ***************************************/
-   
-   printk("Make your own implementation for this function if you need this\n");
-   return 0;
+  
+   float minDistance = calculateDistance(x,y,z,CP[0][0],CP[0][1],CP[0][2]);
+   printk("%f\n",minDistance);
+   float distance;
+   int winner = 0;
+
+   for (int i=1;i<6;i++){
+      distance = calculateDistance(x,y,z,CP[i][0],CP[i][1],CP[i][2]);
+      printk("%f\n",distance);
+      if(minDistance > distance){
+         minDistance = distance;
+         winner = i;
+      }
+
+   }
+   return winner;
 }
 
 void resetConfusionMatrix(void)
