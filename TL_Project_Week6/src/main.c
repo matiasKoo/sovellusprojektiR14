@@ -29,7 +29,7 @@
 #define USER_BUTTON_3           DK_BTN3_MSK
 #define USER_BUTTON_4           DK_BTN4_MSK
 
-#define DEBUG 1  // 0 = changes direction when button 3 is pressed
+#define DEBUG 0  // 0 = changes direction when button 3 is pressed
                  // 1 = fake 100 measurements done to each 6 directions when 3 pressed.
 static int direction = -1;	// 0 = x direction high
 							// 1 = x directon low	
@@ -70,22 +70,22 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 		switch (direction)
 		{
 		case 0:
-			printk("Direction is now set x = high\n");
-			break;
-		case 1:
-			printk("Direction is now set x = low\n");
-			break;
-		case 2:
-			printk("Direction is now set y = high\n");
-			break;
-		case 3:
-			printk("Direction is now set y = low\n");
-			break;
-		case 4:
 			printk("Direction is now set z = high\n");
 			break;
-		case 5:
+		case 1:
 			printk("Direction is now set z = low\n");
+			break;
+		case 2:
+			printk("Direction is now set x = high\n");
+			break;
+		case 3:
+			printk("Direction is now set x = low\n");
+			break;
+		case 4:
+			printk("Direction is now set y = high\n");
+			break;
+		case 5:
+			printk("Direction is now set y = low\n");
 			break;
 		
 		default:
@@ -101,7 +101,9 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 	if ((has_changed & USER_BUTTON_4) && (button_state & USER_BUTTON_4)) 
 	{
 		printk("button 4 down, one meas and classification with current direction =%d\n",direction);
-		//makeOneClassificationAndUpdateConfusionMatrix(direction);
+		struct Measurement m = readADCValue();
+		printk("x = %d,  y = %d,  z = %d\n",m.x,m.y,m.z);
+		makeOneClassificationAndUpdateConfusionMatrix(direction,m.x,m.y,m.z);
 		printConfusionMatrix();
 	}		
 }

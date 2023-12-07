@@ -2,6 +2,7 @@
 #include <math.h>
 #include "confusion.h"
 #include "adc.h"
+#include "kmeans.h"
 
 /* 
   K-means algorithm should provide 6 center points with
@@ -17,6 +18,10 @@
   actual measurements are taken from ADC when accelerator is connected.
 */ 
 
+// tämä indeksoi k-means pisteet järjestykseen
+int index_key[] = {5,0,1,3,4,2};
+
+/*
 int CP[6][3]={
 	                     {1,0,0},
 						 {2,0,0},
@@ -25,6 +30,7 @@ int CP[6][3]={
 						 {0,0,1},
 						 {0,0,2}
 };
+*/
 
 int measurements[6][3]={
 	                     {1,0,0},
@@ -114,9 +120,9 @@ int calculateDistanceToAllCentrePointsAndSelectWinner(int x,int y,int z)
    float distance;
    int winner = 0;
 
-   for (int i=1;i<6;i++){
-      distance = calculateDistance(x,y,z,CP[i][0],CP[i][1],CP[i][2]);
-      if(minDistance > distance){
+   for (int i=0;i<6;i++){
+      distance = calculateDistance(x,y,z,CP[index_key[i]][0],CP[index_key[i]][1],CP[index_key[i]][2]);
+      if(minDistance >= distance){
          minDistance = distance;
          winner = i;
       }
