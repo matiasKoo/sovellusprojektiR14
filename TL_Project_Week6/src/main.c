@@ -104,6 +104,7 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 		struct Measurement m = readADCValue();
 		printk("x = %d,  y = %d,  z = %d\n",m.x,m.y,m.z);
 		makeOneClassificationAndUpdateConfusionMatrix(direction,m.x,m.y,m.z);
+		
 		printConfusionMatrix();
 	}		
 }
