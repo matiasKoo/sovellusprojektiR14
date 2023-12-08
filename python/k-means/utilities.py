@@ -113,7 +113,7 @@ def createCArray(centerPoints):
 def centerPointsToHeader():
     data = createCArray(centerPoints)
 
-    dataString = "#ifndef KMEANS_H\n#define KMEANS_H\nint CP[6][3] = {"
+    dataString = "#ifndef KMEANS_H\n#define KMEANS_H\nfloat CP[6][3] = {"
     dataString = dataString + data + "};\n#endif"
 
     with open("kmeans.h","w") as f:

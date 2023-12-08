@@ -19,6 +19,7 @@
 
 
 
+
 #define USER_LED1         	 	DK_LED1
 #define USER_LED2          		DK_LED2
 #define USER_LED3               DK_LED3
@@ -112,6 +113,7 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 
 void main(void)
 {
+	testi();
 	int err;
 	err = dk_leds_init();
 	if (err) {

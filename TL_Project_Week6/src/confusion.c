@@ -3,7 +3,7 @@
 #include "confusion.h"
 #include "adc.h"
 #include "kmeans.h"
-
+#include "neuroverkonKertoimet.h"
 /* 
   K-means algorithm should provide 6 center points with
   3 values x,y,z. Let's test measurement system with known
@@ -141,4 +141,65 @@ void resetConfusionMatrix(void)
 		}
 	}
 }
+
+void softmax(float n2[6][1]){
+
+   float sum;
+   for(int i=0;i<6;i++){
+      sum += exp(n2[i][0]);
+   }
+   
+   for(int i=0;i<6;i++){
+      n2[i][0] = exp(n2[i][0])/ sum;
+      //printk("%f\n", n2[i][0]);
+   }
+}
+void relu(float n1[10][1]){
+   
+
+   for (int i=0;i<10;i++){
+      if(n1[i][0] < 0){
+         n1[i][0] = 0;
+      }
+      //printk("%f\n", n1[i][0]);
+   }
+}
+void arraysum(float neuronit[], int r,float bias[r][1]){
+   for(int i=0;i<r;i++){
+      neuronit[i] += bias[i][0];
+   }
+}
+void testi(){
+   float valu[2][2] = {{1.1,2.2},{3.3,4.4}};
+    arraytesti(valu);
+   printk("{%f,%f}\n",valu[0][0],valu[0][1]);
+   printk("{%f,%f}\n",valu[1][0],valu[1][1]);
+
+   float n2[6][1] ={{-0.1601722240447998},{0.3263254761695862},{-0.16412590444087982},{0.1776800900697708},{0.03297794982790947},{0.18514344096183777}};
+
+   softmax(n2);
+   for(int i=0;i<6;i++){
+      printk("%f\n", n2[i][0]);
+   }
+
+   float n1[10][1] = {{-5},{-4},{-3},{-2},{-1},{0},{1},{3},{4},{5}};
+
+   relu(n1);
+   for(int i=0;i<10;i++){
+      printk("%f\n", n1[i][0]);
+   }
+   float jotain[] = {1.1,2.2,3.3};
+   float jotain2[][1] = {{1.1},{2.2},{3.3}};
+
+   arraysum(jotain,3,jotain2);
+   for(int i=0;i<3;i++){
+      printk("%f\n", jotain[i]);
+   }
+
+}
+void arraytesti(float arr[2][2]){
+   arr[1][0] = 5.5;
+   
+}
+   
 
