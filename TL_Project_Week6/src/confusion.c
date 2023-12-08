@@ -20,9 +20,6 @@
 
 // tämä indeksoi k-means pisteet järjestykseen
 int index_key[] = {5,0,1,3,4,2};
-//array johon säilötään ensimmäisen neuroverkon kerroksen tulos
-float tulokset_l1[10];
-float tulokset_l2[6];
 
 
 /*
@@ -46,6 +43,7 @@ int measurements[6][3]={
 };
 
 int CM[6][6]= {0};
+int CM_neuro[6][6] = {0};
 
 float calculateDistance(int x1, int y1, int z1,
                         int x2, int y2, int z2){
@@ -70,6 +68,13 @@ void printConfusionMatrix(void)
 	for(int i = 0;i<6;i++)
 	{
 		printk("cp%d %d   %d   %d   %d   %d   %d\n",i+1,CM[i][0],CM[i][1],CM[i][2],CM[i][3],CM[i][4],CM[i][5]);
+	}
+
+   printk("NEUROVERKON Confusion matrix = \n");
+	printk("   cp1 cp2 cp3 cp4 cp5 cp6\n");
+	for(int i = 0;i<6;i++)
+	{
+		printk("cp%d %d   %d   %d   %d   %d   %d\n",i+1,CM_neuro[i][0],CM_neuro[i][1],CM_neuro[i][2],CM_neuro[i][3],CM_neuro[i][4],CM_neuro[i][5]);
 	}
 }
 
@@ -142,28 +147,58 @@ void resetConfusionMatrix(void)
 		for(int j = 0;j<6;j++)
 		{
 			CM[i][j]=0;
+         CM_neuro[i][j]=0;
 		}
 	}
 }
 
-void softmax(float n2[6][1]){
+/* void softmax(float n2[6]){
 
-   float sum;
+   float sum = 0;
+
    for(int i=0;i<6;i++){
-      sum += exp(n2[i][0]);
+      sum += exp(n2[i]); //tässä ylivuodon eston kikkailu jota en ymmärrä
    }
    
    for(int i=0;i<6;i++){
-      n2[i][0] = exp(n2[i][0])/ sum;
+      n2[i] = exp(n2[i])/ sum;
       //printk("%f\n", n2[i][0]);
    }
+} */
+
+void softmax(float n2[6]){
+   //tämä on chatgpt koodia, jossa aiemman softmaxin yli-/alivuotobugi korjattu
+
+   // Calculate softmax using log-sum-exp trick
+   float maxVal = n2[0];
+   for(int i = 1; i < 6; i++){
+      if(n2[i] > maxVal) {
+         maxVal = n2[i];
+      }
+   }
+
+   float logSumExp = 0.0;
+   for(int i = 0; i < 6; i++){
+      logSumExp += exp(n2[i] - maxVal); //tässä kriittinen operaatio, - maxVal
+   }
+
+   float logSoftmax[6];
+   for(int i = 0; i < 6; i++){
+      logSoftmax[i] = n2[i] - maxVal - log(logSumExp);
+   }
+
+   // Exponentiate to get softmax probabilities
+   for(int i = 0; i < 6; i++){
+      n2[i] = exp(logSoftmax[i]);
+   }
 }
-void relu(float n1[10][1]){
+
+void relu(float n1[10]){
    
 
    for (int i=0;i<10;i++){
-      if(n1[i][0] < 0){
-         n1[i][0] = 0;
+      if(n1[i] < 0){
+         n1[i] = 0;
       }
       //printk("%f\n", n1[i][0]);
    }
@@ -173,7 +208,7 @@ void arraysum(float neuronit[], int r,float bias[r][1]){
       neuronit[i] += bias[i][0];
    }
 }
-void testi(){
+/* void testi(){
    float valu[2][2] = {{1.1,2.2},{3.3,4.4}};
     arraytesti(valu);
    printk("{%f,%f}\n",valu[0][0],valu[0][1]);
@@ -200,7 +235,7 @@ void testi(){
       printk("%f\n", jotain[i]);
    }
 
-}
+} */
 void arraytesti(float arr[2][2]){
    arr[1][0] = 5.5;
    
@@ -242,3 +277,45 @@ void matmul_l2(float w2[10][6], float a1[10], float tulos[6])
    }
 
 }
+
+void neuroverkko(int dir, int x, int y, int z){
+   float tulos1[] = {0,0,0,0,0,0,0,0,0,0};
+   float a0[] = {x,y,z};
+   printk("%f, %f, %f\n",a0[0],a0[1],a0[2]);
+   float tulos2[] = {0,0,0,0,0,0};
+
+   //Tässä lasketaan neuroverkon ensimmäinen hidden layer tulos1 matriisiin
+   matmul_l1(str_w1,a0,tulos1);
+   arraysum(tulos1,10,str_b1);
+   relu(tulos1);
+
+   for(int i=0;i<10;i++){
+      printk("l1 tulosmatriisin %d. luku on %f\n",i+1,tulos1[i]);
+      k_sleep(K_MSEC(10));
+      //printk("l2 tulosmatriisin %d. luku on %f\n",i+1,tulos2[i]); 
+   } 
+
+   matmul_l2(str_w2,tulos1,tulos2);
+   arraysum(tulos2,6,str_b2);
+      for(int i=0;i<6;i++){
+      printk("l2 tulosmatriisin %d. luku on %f\n",i+1,tulos2[i]);
+      k_sleep(K_MSEC(10));
+   } 
+   softmax(tulos2);
+   for(int i=0;i<6;i++){
+      printk("l2 tulosmatriisin %d. luku on %f\n",i+1,tulos2[i]);
+      k_sleep(K_MSEC(10));
+   }
+
+
+   float max = -__FLT_MAX__;
+   int index = 0;
+   for(int i=0;i<6;i++){
+      if(tulos2[i]>= max){
+         max = tulos2[i];
+         index = i;
+      }
+   }
+   CM_neuro[dir][index]++;
+}
+

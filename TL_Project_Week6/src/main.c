@@ -16,7 +16,7 @@
 #include <zephyr/devicetree.h>
 
 #include "confusion.h"
-#include "neuroverkonKertoimet.h"
+//#include "neuroverkonKertoimet.h"
 
 
 
@@ -106,7 +106,9 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 		struct Measurement m = readADCValue();
 		printk("x = %d,  y = %d,  z = %d\n",m.x,m.y,m.z);
 		makeOneClassificationAndUpdateConfusionMatrix(direction,m.x,m.y,m.z);
-		
+		neuroverkko(direction,m.x,m.y,m.z);
+
+
 		printConfusionMatrix();
 	}		
 }
@@ -114,7 +116,8 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 
 void main(void)
 {
-	testi();
+	
+	//testi();
 	/* float vector1[] = {1,3,-5};
 	float vector1_x = 1;
 	float vector1_y = 3;
@@ -128,7 +131,7 @@ void main(void)
 	printk("pistetulo: %f\n",testi); */
 
 
- 	float a0[] = {1,2,3};
+ 	/* float a0[] = {1,2,3};
 	float tulos1[] = {0,0,0,0,0,0,0,0,0,0};
 	float a1[] = {2,2,2,2,2,2,2,2,2,2};
 	float tulos2[] = {0,0,0,0,0,0};
@@ -150,7 +153,8 @@ void main(void)
 
 	matmul_l2(w2_testi,a1,tulos2);
 	printk("%f, %f, %f, %f, %f, %f\n",tulos2[0],tulos2[1],tulos2[2],
-									tulos2[3],tulos2[4],tulos2[5]);
+									tulos2[3],tulos2[4],tulos2[5]); */
+
 
 	int err;
 	err = dk_leds_init();
