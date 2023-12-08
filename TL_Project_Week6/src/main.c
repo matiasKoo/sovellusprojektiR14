@@ -16,6 +16,7 @@
 #include <zephyr/devicetree.h>
 
 #include "confusion.h"
+#include "neuroverkonKertoimet.h"
 
 
 
@@ -112,6 +113,43 @@ static void button_changed(uint32_t button_state, uint32_t has_changed)
 
 void main(void)
 {
+	/* float vector1[] = {1,3,-5};
+	float vector1_x = 1;
+	float vector1_y = 3;
+	float vector1_z = -5;
+	float vector2[] = {4,-2,-1};
+	float vector2_x = 4;
+	float vector2_y = -2;
+	float vector2_z = -1;
+	float testi = dotProduct(vector1[0],vector1[1],vector1[2],
+				vector2_x,vector2_y,vector2_z);
+	printk("pistetulo: %f\n",testi); */
+
+
+ 	float a0[] = {1,2,3};
+	float tulos1[] = {0,0,0,0,0,0,0,0,0,0};
+	float a1[] = {2,2,2,2,2,2,2,2,2,2};
+	float tulos2[] = {0,0,0,0,0,0};
+
+	float w1_testi[3][10] = {{2,2,2,2,2,2,2,2,2,2},{2,2,2,2,2,2,2,2,2,2},{2,2,2,2,2,2,2,2,2,2}};
+	float w2_testi[10][6] = {
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2},
+		{2,2,2,2,2,2}
+	};
+	matmul_l1(w1_testi,a0,tulos1);
+
+	matmul_l2(w2_testi,a1,tulos2);
+	printk("%f, %f, %f, %f, %f, %f\n",tulos2[0],tulos2[1],tulos2[2],
+									tulos2[3],tulos2[4],tulos2[5]);
+
 	int err;
 	err = dk_leds_init();
 	if (err) {
