@@ -20,6 +20,10 @@
 
 // tämä indeksoi k-means pisteet järjestykseen
 int index_key[] = {5,0,1,3,4,2};
+//array johon säilötään ensimmäisen neuroverkon kerroksen tulos
+float tulokset_l1[10];
+float tulokset_l2[6];
+
 
 /*
 int CP[6][3]={
@@ -203,3 +207,38 @@ void arraytesti(float arr[2][2]){
 }
    
 
+float dotProduct(float x1, float y1, float z1,
+                  float x2, float y2, float z2)
+{
+   float product = x2*x1 + y2*y1 + z2*z1;
+   return product;
+}
+
+void matmul_l1(float w1[3][10], float a0[3], float tulos[10]){
+   //w1 on muotoa [3][10]
+   //a0 on siis oltava muotoa [1][3]
+   //jokainen w1[3][rivi] pistetulotetaan a0 kanssa
+   for(int i=0;i<10;i++){
+      //tähän yhden rivin ja sarakkeen pistetulo
+
+      float pistetulo = a0[0]*w1[0][i] + a0[1]*w1[1][i] + a0[2]*w1[2][i];
+      tulos[i] = pistetulo;
+
+   }
+}
+
+
+void matmul_l2(float w2[10][6], float a1[10], float tulos[6])
+{
+   //matriisikertolasku 10x6 * 1x10
+   float pistetulo;
+   for(int i=0;i<6;i++){
+      for(int j=0;j<10;j++){
+         pistetulo = pistetulo + w2[j][i]*a1[j];
+      }
+      tulos[i] = pistetulo;
+      //printk("2. krs tulostaulukon %d:s elementti: %d\n",i+1,tulos[i]);
+      pistetulo = 0;
+   }
+
+}
