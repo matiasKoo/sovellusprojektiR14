@@ -6,7 +6,6 @@ This project will consist of a client gathering sensor data that relays said dat
 
 The database will be accessible by TCP-socket API and a simple HTTP API. The stored data will be retrieved for processing for machine learning purposes on a PC.
 
-[projektikuva](https://github.com/matiasKoo/sovellusprojektiR14/blob/main/pictures/tietoliikenneprojekti%20kaavio.drawio.png)
 
 ## nordic semiconductior nrf5340
 This platform is central in this application. It runs code for an Analog to Digital Converter (ADC), which is used to get data from an acceleration sensor. There also is a bluetooth service for relaying the gathered data onward, in this case to a raspberry pi.
@@ -19,3 +18,6 @@ The http API was provided to us, so this project only has python code to connect
 
 ## machine learning software
 This project has a K-means algorithm that (provided good enough data and epochs) learns 6 orientations corresponding to 6 directions the sensor can face, and then can estimate the orientation of arbitrary sensor data based on this. As an extra assignment, we also taught these points to a neural network (this code in the jupiter .ipynb file) and implemented the taught neural network in C running on the Nordic board. 
+
+<img src="pictures/confusion_matrix.png" align="left" />
+<img src="pictures/confusion_matrix_neural.png" align="right" />
