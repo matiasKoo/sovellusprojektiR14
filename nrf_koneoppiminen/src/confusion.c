@@ -21,16 +21,6 @@
 // tämä indeksoi k-means pisteet järjestykseen
 int index_key[] = {5,0,1,3,4,2};
 
-/*
-int CP[6][3]={
-	                     {1,0,0},
-						 {2,0,0},
-						 {0,1,0},
-						 {0,2,0},
-						 {0,0,1},
-						 {0,0,2}
-};
-*/
 
 int measurements[6][3]={
 	                     {1,0,0},

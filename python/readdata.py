@@ -20,7 +20,7 @@ def notification_handler(characteristic: BleakGATTCharacteristic, data: bytearra
 
     if ( val < 6):
         if (started != 0):
-            #sql functio
+            #sql funktio
             db_write.db_write(data_arr[0],data_arr[1],data_arr[2],data_arr[3])
             print(data_arr)
             data_arr.clear()
@@ -39,7 +39,6 @@ def notification_handler(characteristic: BleakGATTCharacteristic, data: bytearra
 
 async def main(address):
     async with BleakClient(address) as client:
-        #print("connected",client.is_connected)
 
         await client.start_notify(CHAR_NBR_UUID, notification_handler)
         await asyncio.sleep(3.0)
