@@ -19,5 +19,9 @@ The http API was provided to us, so this project only has python code to connect
 ## machine learning software
 This project has a K-means algorithm that (provided good enough data and epochs) learns 6 orientations corresponding to 6 directions the sensor can face, and then can estimate the orientation of arbitrary sensor data based on this. As an extra assignment, we also taught these points to a neural network (this code in the jupiter .ipynb file) and implemented the taught neural network in C running on the Nordic board. 
 
+Below is a picture of k-means confusion matrix made with real data measurements. Rows correspond to what "direction" the nrf board is supposed to measure, and columns correspond to closest center point
+
 <img src="pictures/confusion_matrix.png" align="left" />
-<img src="pictures/confusion_matrix_neural.png" align="right" />
+
+Below is a picture of two confusion matrices. Both matrices use the same data for calculations, the first one is k-means as described above, and the one below is filled with decisions of the trained neural network.
+<img src="pictures/confusion_matrix_neural.png" align="left" />
