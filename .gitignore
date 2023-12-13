@@ -1,4 +1,5 @@
 .env
+.vscode/
 **/build/
 **/__pycache__
 **/py_data.csv
