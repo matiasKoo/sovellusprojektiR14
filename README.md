@@ -21,9 +21,9 @@ This project has a K-means algorithm that (provided good enough data and epochs)
 
 Below is a picture of k-means confusion matrix made with real data measurements. Rows correspond to what "direction" the nrf board is supposed to measure, and columns correspond to closest center point
 
-<img src="pictures/confusion_matrix.png" align="left" />
+<img src="pictures/confusion_matrix.png" align="center" />
 
 <div></div>
 
 Below is a picture of two confusion matrices. Both matrices use the same data for calculations, the first one is k-means as described above, and the one below is filled with decisions of the trained neural network.
-<img src="pictures/confusion_matrix_neural.png" align="left" />
+<img src="pictures/confusion_matrix_neural.png" align="center" />
