@@ -1,3 +1,5 @@
+<img src="pictures/projektikaavio.png" align="right" />
+
 # Tietoliikenteen sovellusprojekti Ryhmä 14
 
 This project will consist of a client gathering sensor data that relays said data to IoT-router (Raspberry Pi). This router will relay data to Oamk MySQL server.
